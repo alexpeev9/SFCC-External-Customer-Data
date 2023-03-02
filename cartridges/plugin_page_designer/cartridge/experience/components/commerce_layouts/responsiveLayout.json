@@ -1,0 +1,83 @@
+{
+    "name": "Responsive Layout",
+    "description": "Responsive Layout",
+    "group": "commerce_layouts",
+    "attribute_definition_groups": [
+        {
+            "id": "paddings",
+            "name": "Paddings",
+            "description": "Paddings",
+            "attribute_definitions": [
+                {
+                    "id": "left",
+                    "name": "Left Padding",
+                    "description": "Left Padding",
+                    "type": "enum",
+                    "values": [
+                        0,
+                        1,
+                        2,
+                        3,
+                        4,
+                        5
+                    ],
+                    "default_value": 0
+
+                },
+                {
+                    "id": "right",
+                    "name": "Right Padding",
+                    "description": "Right Padding",
+                    "type": "enum",
+                    "values": [
+                        0,
+                        1,
+                        2,
+                        3,
+                        4,
+                        5
+                    ],
+                    "default_value": 0
+                },
+                {
+                    "id": "top",
+                    "name": "Top Padding",
+                    "description": "Top Padding",
+                    "type": "enum",
+                    "values": [
+                        0,
+                        1,
+                        2,
+                        3,
+                        4,
+                        5
+                    ],
+                    "default_value": 0
+                },
+                {
+                    "id": "bottom",
+                    "name": "Bottom Padding",
+                    "description": "Bottom Padding",
+                    "type": "enum",
+                    "values": [
+                        0,
+                        1,
+                        2,
+                        3,
+                        4,
+                        5
+                    ],
+                    "default_value": 0
+                }
+            ]
+        }
+    ],
+    "region_definitions": [
+        {
+            "id": "body",
+            "name": "Body",
+            "component_type_exclusions": [
+            ]
+        }
+    ]
+}

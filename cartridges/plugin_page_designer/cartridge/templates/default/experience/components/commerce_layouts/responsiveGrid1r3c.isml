@@ -1,0 +1,10 @@
+<isscript>
+    var assets = require('*/cartridge/scripts/assets.js');
+    assets.addCss('/css/experience/components/commerceLayouts/layout.css');
+</isscript>
+
+<div class="row">
+    <isprint value="${pdict.regions.column1.render()}" encoding="off" />
+    <isprint value="${pdict.regions.column2.render()}" encoding="off" />
+    <isprint value="${pdict.regions.column3.render()}" encoding="off" />
+</div>

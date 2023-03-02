@@ -1,0 +1,28 @@
+<isset name="LinkPositionClass"
+    value="${pdict.category.categoryLinkPosition == 'top' ? 'flex-column-reverse' : 'flex-column'}" scope="page" />
+
+<div class="row">
+    <div class="col-12 d-flex justify-content-center text-center ${LinkPositionClass}">
+        <a href="${pdict.category.url}" class="text-decoration-none">
+            <figure>
+                <picture>
+                    <img class="featured-category-component-image mw-100" src="${pdict.image.src.desktop}"
+                        alt="${pdict.category.name} category image" title="${pdict.category.name}" loading="lazy" />
+                </picture>
+                <isif condition="${pdict.category.description}">
+                    <figcaption>
+                        <div class="featured-category-description text-dark">
+                            <span>
+                                <isprint value="${pdict.category.description}" encoding="off" />
+                            </span>
+                        </div>
+                    </figcaption>
+                </isif>
+            </figure>
+        </a>
+        <div class="featured-category-link">
+            <a href="${pdict.category.url}" class="featured-category-link-a">${pdict.category.categoryLinkName}</a>
+        </div>
+
+    </div>
+</div>

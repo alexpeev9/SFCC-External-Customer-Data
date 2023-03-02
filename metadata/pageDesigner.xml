@@ -1,0 +1,195 @@
+ <content content-id="096c721f7f244079a9b7c17a28">
+        <type>component.commerce_layouts.mobileGrid2r1c</type>
+        <config>{
+  "visibility" : [ ]
+}</config>
+        <data xml:lang="x-default">{ }</data>
+        <online-flag>true</online-flag>
+        <online-flag site-id="RefArch">true</online-flag>
+        <page-attributes/>
+        <content-links>
+            <content-link content-id="e95f64e42f3993f7cabdb928a0" type="component.commerce_layouts.mobileGrid2r1c.column1">
+                <position>0.0</position>
+            </content-link>
+            <content-link content-id="476e3b5dd4ae6bde931e7eafb2" type="component.commerce_layouts.mobileGrid2r1c.column2">
+                <position>0.0</position>
+            </content-link>
+        </content-links>
+    </content>
+	    <content content-id="2ee59465fb940e05371235fd79">
+        <type>component.commerce_assets.editorialRichText</type>
+        <config>{
+  "visibility" : [ ]
+}</config>
+        <data xml:lang="x-default">{
+  "richText" : "&lt;p&gt;Hello&lt;/p&gt;"
+}</data>
+        <online-flag>true</online-flag>
+        <online-flag site-id="RefArch">true</online-flag>
+        <page-attributes/>
+    </content>
+<content content-id="634ce48000d8008e1768ba5051">
+        <type>component.commerce_assets.productTile</type>
+        <config>{
+  "visibility" : [ ]
+}</config>
+        <data xml:lang="x-default">{
+  "product" : "25565189M",
+  "displayRatings" : false
+}</data>
+        <online-flag>true</online-flag>
+        <online-flag site-id="RefArch">true</online-flag>
+        <page-attributes/>
+    </content>
+ <content content-id="964fc9fed1d80a5fe23477c808">
+        <type>component.commerce_assets.mainBanner</type>
+        <config>{
+  "visibility" : [ ]
+}</config>
+        <data xml:lang="x-default">{
+  "image" : {
+    "path" : "/images/gift-certificates.png",
+    "focal_point" : {
+      "x" : 0.5,
+      "y" : 0.5
+    },
+    "meta_data" : {
+      "height" : 162,
+      "width" : 312
+    }
+  },
+  "cta" : "root",
+  "shortDescription" : "&lt;p&gt;Main Description&lt;/p&gt;",
+  "title" : "&lt;p&gt;MainTitle&lt;/p&gt;"
+}</data>
+        <online-flag>true</online-flag>
+        <online-flag site-id="RefArch">true</online-flag>
+        <page-attributes/>
+    </content>
+    <content content-id="973c57040efd6b6d151785aeac">
+        <type>component.commerce_assets.categoryTile</type>
+        <config>{
+  "visibility" : [ ]
+}</config>
+        <data xml:lang="x-default">{
+  "image" : {
+    "path" : "/images/myaccount_personaldata.png",
+    "focal_point" : {
+      "x" : 0.5,
+      "y" : 0.5
+    },
+    "meta_data" : {
+      "height" : 70,
+      "width" : 75
+    }
+  },
+  "categoryLinkName" : "Men",
+  "categoryLinkPosition" : "bottom",
+  "description" : "&lt;p&gt;Men Category&lt;/p&gt;",
+  "category" : "mens"
+}</data>
+        <online-flag>true</online-flag>
+        <online-flag site-id="RefArch">true</online-flag>
+        <page-attributes/>
+    </content>
+ </content>
+    <content content-id="99e02e82aba0dc6d4c40f76479">
+        <type>component.commerce_layouts.mobileGrid1r1c</type>
+        <config>{
+  "visibility" : [ ]
+}</config>
+        <data xml:lang="x-default">{ }</data>
+        <online-flag>true</online-flag>
+        <online-flag site-id="RefArch">true</online-flag>
+        <page-attributes/>
+        <content-links>
+            <content-link content-id="964fc9fed1d80a5fe23477c808" type="component.commerce_layouts.mobileGrid1r1c.column1">
+                <position>0.0</position>
+            </content-link>
+        </content-links>
+    </content>
+ <content content-id="af3175a32cd9b1da829d859a1b">
+        <type>component.commerce_layouts.responsiveGrid1r3c</type>
+        <config>{
+  "visibility" : [ ]
+}</config>
+        <data xml:lang="x-default">{ }</data>
+        <online-flag>true</online-flag>
+        <online-flag site-id="RefArch">true</online-flag>
+        <page-attributes/>
+        <content-links>
+            <content-link content-id="2ee59465fb940e05371235fd79" type="component.commerce_layouts.responsiveGrid1r3c.column2">
+                <position>0.0</position>
+            </content-link>
+            <content-link content-id="754e5b3d7120da186b9dd217c2" type="component.commerce_layouts.responsiveGrid1r3c.column3">
+                <position>0.0</position>
+            </content-link>
+            <content-link content-id="00968f94c083185a2e9df7f810" type="component.commerce_layouts.responsiveGrid1r3c.column1">
+                <position>0.0</position>
+            </content-link>
+        </content-links>
+    </content>
+ </content>
+    <content content-id="b289867c9138a0756bb080ef6f">
+        <type>component.commerce_assets.productTile</type>
+        <config>{
+  "visibility" : [ ]
+}</config>
+        <data xml:lang="x-default">{
+  "product" : "25686514M",
+  "displayRatings" : false
+}</data>
+        <online-flag>true</online-flag>
+        <online-flag site-id="RefArch">true</online-flag>
+        <page-attributes/>
+    </content>
+ </content>
+    <content content-id="ca63102043f410ad0a5bf611fb">
+        <type>component.commerce_layouts.mobileGrid1r1c</type>
+        <config>{
+  "visibility" : [ ]
+}</config>
+        <data xml:lang="x-default">{ }</data>
+        <online-flag>true</online-flag>
+        <online-flag site-id="RefArch">true</online-flag>
+        <page-attributes/>
+        <content-links>
+            <content-link content-id="973c57040efd6b6d151785aeac" type="component.commerce_layouts.mobileGrid1r1c.column1">
+                <position>0.0</position>
+            </content-link>
+        </content-links>
+    </content>
+ </content>
+    <content content-id="pd-example">
+        <display-name xml:lang="x-default">PD-Example</display-name>
+        <description xml:lang="x-default">Simple page created with page designer</description>
+        <type>page.storePage</type>
+        <config>{
+  "visibility" : [ ]
+}</config>
+        <visibility-mode xml:lang="x-default">visible</visibility-mode>
+        <data xml:lang="x-default">{ }</data>
+        <online-flag>false</online-flag>
+        <online-flag site-id="RefArch">true</online-flag>
+        <searchable-flag>false</searchable-flag>
+        <searchable-flag site-id="RefArch">false</searchable-flag>
+        <page-attributes/>
+        <folder-links>
+            <classification-link folder-id="root"/>
+        </folder-links>
+        <content-links>
+            <content-link content-id="ca63102043f410ad0a5bf611fb" type="page.storePage.main">
+                <position>2.0</position>
+            </content-link>
+            <content-link content-id="99e02e82aba0dc6d4c40f76479" type="page.storePage.main">
+                <position>0.0</position>
+            </content-link>
+            <content-link content-id="af3175a32cd9b1da829d859a1b" type="page.storePage.main">
+                <position>1.0</position>
+            </content-link>
+            <content-link content-id="096c721f7f244079a9b7c17a28" type="page.storePage.main">
+                <position>3.0</position>
+            </content-link>
+        </content-links>
+        <sitemap-included-flag site-id="RefArch">false</sitemap-included-flag>
+    </content>

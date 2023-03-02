@@ -1,0 +1,50 @@
+{
+    "name": "Category Tile",
+    "description": "Featured Category Tile.",
+    "group": "commerce_assets",
+    "attribute_definition_groups": [
+        {
+            "id": "featuredCategory",
+            "name": "Featured Category",
+            "description": "Specify the featured category to be displayed.",
+            "attribute_definitions": [
+                {
+                    "id": "category",
+                    "name": "Category ID",
+                    "description": "The ID of the category to be displayed.",
+                    "type": "category",
+                    "required": true
+                },
+                {
+                    "id": "image",
+                    "name": "Image",
+                    "type": "image",
+                    "required": true
+                },
+                {
+                    "id": "description",
+                    "name": "Description",
+                    "type": "markup",
+                    "required": false
+                },
+                {
+                    "id": "categoryLinkName",
+                    "name": "Category Link Name",
+                    "description": "The name of the CTA link",
+                    "type": "string",
+                    "required": false
+                },
+                {
+                    "id": "categoryLinkPosition",
+                    "name": "Category Link Position",
+                    "description": "Position the category link at the top or at the bottom.",
+                    "type": "enum",
+                    "values": [ "top", "bottom" ],
+                    "default_value": "bottom",
+                    "required": true
+                }
+            ]
+        }
+    ],
+    "region_definitions": [ ]
+}

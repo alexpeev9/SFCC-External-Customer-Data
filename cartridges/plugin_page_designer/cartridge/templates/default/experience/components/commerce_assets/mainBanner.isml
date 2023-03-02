@@ -1,0 +1,28 @@
+<isscript>
+    var assets = require('*/cartridge/scripts/assets.js');
+    assets.addCss('/css/experience/components/commerceAssets/imageAndTextCommon.css');
+</isscript>
+
+<div class="mainbanner-container">
+    <figure class="mainbanner-figure image-component text-white">
+        <picture>
+            <source srcset="${pdict.image.src.tablet}" media="(min-width: 768px)" />
+            <source srcset="${pdict.image.src.desktop}" media="(min-width: 1024px)" />
+            <img class="mainbanner-image image-fluid common-image-component common-image-filter"
+                src="${pdict.image.src.mobile}"
+                style="--focal-point-x:${pdict.image.focalPointX}; --focal-point-y:${pdict.image.focalPointY}" <isif
+                condition="${pdict.image.alt}">alt="${pdict.image.alt}" title="${pdict.image.alt}"
+
+            </isif>
+            loading="lazy"
+            />
+        </picture>
+        <h4 class="main-title position-absolute w-100 text-center pt-3">
+            <isprint value="${pdict.title}" encoding="off" />
+        </h4>
+        <section class="main-description position-absolute d-flex flex-column px-3">
+            <isprint value="${pdict.shortDescription}" encoding="off" />
+            <a href="${pdict.cta}">${Resource.msg('cta.text', 'page_designer', null)}</a>
+        </section>
+    </figure>
+</div>

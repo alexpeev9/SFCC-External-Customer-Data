@@ -1,0 +1,60 @@
+{
+    "name": "Main Banner",
+    "description": "Image, text overlay that links user to a category using the markup editor",
+    "group": "commerce_assets",
+    "attribute_definition_groups": [
+        {
+            "id": "bannerImage",
+            "name": "Banner Image",
+            "description": "The visual display of the banner image in the background.",
+            "attribute_definitions": [
+                {
+                    "id": "image",
+                    "name": "Image",
+                    "type": "image",
+                    "required": true
+                }
+            ]
+        },
+        {
+            "id": "bannerTitle",
+            "name": "Title",
+            "description": "The title on top of the banner image.",
+            "attribute_definitions": [
+                {
+                    "id": "title",
+                    "name": "Title",
+                    "type": "markup",
+                    "required": true
+                }
+            ]
+        },
+        {
+            "id": "bannerShortDescription",
+            "name": "Short Description",
+            "description": "The short description text at the bottom of the banner image.",
+            "attribute_definitions": [
+                {
+                    "id": "shortDescription",
+                    "name": "Short Description",
+                    "type": "markup",
+                    "required": true
+                }
+            ]
+        },
+        {
+            "id": "bannerCta",
+            "name": "Call To Action",
+            "description": "The CTA link on the banner image",
+            "attribute_definitions": [
+                {
+                    "id": "cta",
+                    "name": "Call To Action",
+                    "type": "category",
+                    "required": true
+                }
+            ]
+        }
+    ],
+    "region_definitions": [ ]
+}

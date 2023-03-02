@@ -1,0 +1,70 @@
+{
+    "name": "Responsive Grid 1 Row 3 Columns",
+    "description": "This is a layout component of 3 rows by 1 column for mobile and 1 row by 3 columns for desktop/tablet.",
+    "group": "commerce_layouts",
+    "attribute_definition_groups": [
+        {
+            "id": "columnsOrder",
+            "name": "The order of the columns layout",
+            "description": "Used to set the order in which the columns will be positioned.",
+            "attribute_definitions": [
+                {
+                    "id": "firstColumn",
+                    "name": "First column position",
+                    "description": "Position of the first column.",
+                    "type": "enum",
+                    "values": [
+                        1,
+                        2,
+                        3
+                    ],
+                    "default_value": 1,
+                    "required": false
+                },
+                {
+                    "id": "secondColumn",
+                    "name": "Second column position",
+                    "description": "Position of the second column.",
+                    "type": "enum",
+                    "values": [
+                        1,
+                        2,
+                        3
+                    ],
+                    "default_value": 2,
+                    "required": false
+                },
+                {
+                    "id": "thirdColumn",
+                    "name": "Third column position",
+                    "description": "Position of the third column.",
+                    "type": "enum",
+                    "values": [
+                        1,
+                        2,
+                        3
+                    ],
+                    "default_value": 3,
+                    "required": false
+                }
+            ]
+        }
+    ],
+    "region_definitions": [
+        {
+            "id": "column1",
+            "name": "Column 1",
+            "component_type_exclusions": [ ]
+        },
+        {
+            "id": "column2",
+            "name": "Column 2",
+            "component_type_exclusions": [ ]
+        },
+        {
+            "id": "column3",
+            "name": "Column 3",
+            "component_type_exclusions": [ ]
+        }
+    ]
+}

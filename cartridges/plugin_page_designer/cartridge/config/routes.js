@@ -1,0 +1,3 @@
+module.exports = {
+    homePage: "Show",
+};
