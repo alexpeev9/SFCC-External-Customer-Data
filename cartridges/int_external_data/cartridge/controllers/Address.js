@@ -5,6 +5,7 @@
  */
 
 var server = require("server");
+server.extend(module.superModule);
 
 var URLUtils = require("dw/web/URLUtils");
 var Resource = require("dw/web/Resource");
@@ -58,3 +59,5 @@ server.append(
         return next();
     }
 );
+
+module.exports = server.exports();
