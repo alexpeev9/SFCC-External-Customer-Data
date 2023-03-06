@@ -37,14 +37,13 @@ server.replace(
     server.middleware.https,
     csrfProtection.validateAjaxRequest,
     function (req, res, next) {
-        var CustomerMgr = require("dw/customer/CustomerMgr");
-        var Resource = require("dw/web/Resource");
+        const CustomerMgr = require("dw/customer/CustomerMgr");
+        const Resource = require("dw/web/Resource");
+        const formErrors = require("*/cartridge/scripts/formErrors");
+        const registrationForm = server.forms.getForm("profile");
+        const userService = require("*/cartridge/scripts/userService.js"); // define userService
 
-        var formErrors = require("*/cartridge/scripts/formErrors");
-
-        var registrationForm = server.forms.getForm("profile");
-        const userService = require("*/cartridge/scripts/userService.js");
-
+        // body for firebase query
         const body = {
             firstname: registrationForm.customer.firstname.value,
             lastname: registrationForm.customer.lastname.value,
@@ -52,6 +51,7 @@ server.replace(
             phone: registrationForm.customer.phone.value,
             password: registrationForm.login.password.value,
         };
+
         // form validation
         if (
             registrationForm.customer.email.value.toLowerCase() !==
@@ -114,17 +114,17 @@ server.replace(
 
             this.on("route:BeforeComplete", function (req, res) {
                 // eslint-disable-line no-shadow
-                var Transaction = require("dw/system/Transaction");
-                var accountHelpers = require("*/cartridge/scripts/helpers/accountHelpers");
-                var authenticatedCustomer;
-                var serverError;
+                const Transaction = require("dw/system/Transaction");
+                const accountHelpers = require("*/cartridge/scripts/helpers/accountHelpers");
+                let authenticatedCustomer;
+                let serverError;
 
                 // getting variables for the BeforeComplete function
-                var registrationForm = res.getViewData(); // eslint-disable-line
+                const registrationForm = res.getViewData(); // eslint-disable-line
 
                 if (registrationForm.validForm) {
-                    var login = registrationForm.email;
-                    var password = registrationForm.password;
+                    const login = registrationForm.email;
+                    const password = registrationForm.password;
 
                     // Refactored New Part
 
@@ -132,79 +132,12 @@ server.replace(
                         method: "POST",
                         route: "/users.json",
                         body,
-                    }).object;
-                    const data = JSON.parse(response);
+                    }).object; // add user in database
 
-                    if (data) {
-                        // attempt to create a new user and log that user in.
-                        try {
-                            Transaction.wrap(function () {
-                                var error = {};
-                                var newCustomer = CustomerMgr.createCustomer(
-                                    login,
-                                    password,
-                                    data.name
-                                );
+                    const data = JSON.parse(response); // parse raw response
 
-                                var authenticateCustomerResult =
-                                    CustomerMgr.authenticateCustomer(
-                                        login,
-                                        password
-                                    );
-                                if (
-                                    authenticateCustomerResult.status !==
-                                    "AUTH_OK"
-                                ) {
-                                    error = {
-                                        authError: true,
-                                        status: authenticateCustomerResult.status,
-                                    };
-                                    throw error;
-                                }
-
-                                authenticatedCustomer =
-                                    CustomerMgr.loginCustomer(
-                                        authenticateCustomerResult,
-                                        false
-                                    );
-
-                                if (!authenticatedCustomer) {
-                                    error = {
-                                        authError: true,
-                                        status: authenticateCustomerResult.status,
-                                    };
-                                    throw error;
-                                } else {
-                                    // assign values to the profile
-                                    var newCustomerProfile =
-                                        newCustomer.getProfile();
-
-                                    newCustomerProfile.firstName =
-                                        registrationForm.firstName;
-                                    newCustomerProfile.lastName =
-                                        registrationForm.lastName;
-                                    newCustomerProfile.phoneHome =
-                                        registrationForm.phone;
-                                    newCustomerProfile.email =
-                                        registrationForm.email;
-                                }
-                            });
-                        } catch (e) {
-                            if (e.authError) {
-                                serverError = true;
-                            } else {
-                                registrationForm.validForm = false;
-                                registrationForm.form.customer.email.valid = false;
-                                registrationForm.form.customer.emailconfirm.valid = false;
-                                registrationForm.form.customer.email.error =
-                                    Resource.msg(
-                                        "error.message.username.invalid",
-                                        "forms",
-                                        null
-                                    );
-                            }
-                        }
-                    } else {
+                    // if error with database, display database connection message
+                    if (!data) {
                         registrationForm.validForm = false;
                         res.setViewData(registrationForm);
                         res.setStatusCode(500);
@@ -216,6 +149,73 @@ server.replace(
                                 null
                             ),
                         });
+                    }
+
+                    // attempt to create a new user and log that user in.
+                    try {
+                        Transaction.wrap(function () {
+                            let error = {};
+                            const newCustomer = CustomerMgr.createCustomer(
+                                login,
+                                password,
+                                data.name // saves firebase key to CustomerNo row in Customer table
+                            );
+
+                            const authenticateCustomerResult =
+                                CustomerMgr.authenticateCustomer(
+                                    login,
+                                    password
+                                );
+                            if (
+                                authenticateCustomerResult.status !== "AUTH_OK"
+                            ) {
+                                error = {
+                                    authError: true,
+                                    status: authenticateCustomerResult.status,
+                                };
+                                throw error;
+                            }
+
+                            authenticatedCustomer = CustomerMgr.loginCustomer(
+                                authenticateCustomerResult,
+                                false
+                            );
+
+                            if (!authenticatedCustomer) {
+                                error = {
+                                    authError: true,
+                                    status: authenticateCustomerResult.status,
+                                };
+                                throw error;
+                            } else {
+                                // assign values to the profile
+                                const newCustomerProfile =
+                                    newCustomer.getProfile();
+
+                                newCustomerProfile.firstName =
+                                    registrationForm.firstName;
+                                newCustomerProfile.lastName =
+                                    registrationForm.lastName;
+                                newCustomerProfile.phoneHome =
+                                    registrationForm.phone;
+                                newCustomerProfile.email =
+                                    registrationForm.email;
+                            }
+                        });
+                    } catch (e) {
+                        if (e.authError) {
+                            serverError = true;
+                        } else {
+                            registrationForm.validForm = false;
+                            registrationForm.form.customer.email.valid = false;
+                            registrationForm.form.customer.emailconfirm.valid = false;
+                            registrationForm.form.customer.email.error =
+                                Resource.msg(
+                                    "error.message.username.invalid",
+                                    "forms",
+                                    null
+                                );
+                        }
                     }
                 }
 
@@ -295,49 +295,155 @@ server.append(
     server.middleware.https,
     csrfProtection.validateAjaxRequest,
     function (req, res, next) {
-        const CustomerMgr = require("dw/customer/CustomerMgr");
         const Resource = require("dw/web/Resource");
-        const userService = require("*/cartridge/scripts/userService.js");
         const formErrors = require("*/cartridge/scripts/formErrors");
         const profileForm = server.forms.getForm("profile");
+        const userService = require("*/cartridge/scripts/userService.js"); // define userService
+        const customerNo = req.currentCustomer.profile.customerNo; // get customerNo, needed for service
 
-        const body = {
-            firstname: profileForm.customer.firstname.value,
-            lastname: profileForm.customer.lastname.value,
-            email: profileForm.customer.email.value,
-            phone: profileForm.customer.phone.value,
-            password: profileForm.login.password.value,
-        };
+        // check if form is valid
+        if (profileForm.valid) {
+            const body = {
+                firstname: profileForm.customer.firstname.value,
+                lastname: profileForm.customer.lastname.value,
+                email: profileForm.customer.email.value,
+                phone: profileForm.customer.phone.value,
+                password: profileForm.login.password.value,
+            }; // Body for request
 
-        const customer = CustomerMgr.getCustomerByCustomerNumber(
-            req.currentCustomer.profile.customerNo
-        );
-        const profile = customer.getProfile();
+            const response = userService.execute().call({
+                method: "PUT",
+                route: `/users/${customerNo}.json`,
+                body,
+            }).object; // updates user data
 
-        const response = userService.execute().call({
-            method: "PUT",
-            route: `/users/${profile.customerNo}.json`,
-            body,
-        }).object;
-        const data = JSON.parse(response);
+            const data = JSON.parse(response); // Parse raw response
 
-        this.on("route:BeforeComplete", function (req, res) {
-            if (!data) {
-                profileForm.customer.firstname.valid = false;
-                profileForm.customer.firstname.error = Resource.msg(
-                    "database.connection",
-                    "errors",
-                    null
-                );
+            this.on("route:BeforeComplete", function (req, res) {
+                // if error with database, display database connection message
+                if (!data) {
+                    profileForm.login.password.valid = false;
+                    profileForm.login.password.error = Resource.msg(
+                        "database.connection",
+                        "errors",
+                        null
+                    );
 
-                res.json({
-                    success: false,
-                    fields: formErrors.getFormErrors(profileForm),
-                });
+                    res.json({
+                        success: false,
+                        fields: formErrors.getFormErrors(profileForm),
+                    });
 
-                return;
+                    return;
+                }
+            });
+        } else {
+            res.json({
+                success: false,
+                fields: formErrors.getFormErrors(profileForm),
+            });
+        }
+        return next();
+    }
+);
+
+/**
+ * Account-SavePassword : The Account-SavePassword endpoint is the endpoit that handles changing the shopper's password
+ * @name Base/Account-SavePassword
+ * @function
+ * @memberof Account
+ * @param {middleware} - server.middleware.https
+ * @param {middleware} - csrfProtection.validateAjaxRequest
+ * @param {httpparameter} - dwfrm_profile_login_currentpassword - Input field for the shopper's current password
+ * @param {httpparameter} - dwfrm_profile_login_newpasswords_newpassword - Input field for the shopper's new password
+ * @param {httpparameter} - dwfrm_profile_login_newpasswords_newpasswordconfirm - Input field for the shopper to confirm their new password
+ * @param {httpparameter} - csrf_token - hidden input field CSRF token
+ * @param {category} - sensitive
+ * @param {returns} - json
+ * @param {serverfunction} - post
+ */
+server.append(
+    "SavePassword",
+    server.middleware.https,
+    csrfProtection.validateAjaxRequest,
+    function (req, res, next) {
+        const Resource = require("dw/web/Resource");
+        const formErrors = require("*/cartridge/scripts/formErrors");
+        const profileForm = server.forms.getForm("profile"); // get profile form
+        const newPasswords = profileForm.login.newpasswords; // get helper variable
+        const userService = require("*/cartridge/scripts/userService.js"); // define userService
+        const customerNo = req.currentCustomer.profile.customerNo; // get customerNo, needed for service
+        let userDataSuccess, passwordsMatch, userData; // define variables needed for validations
+
+        // check if form is valid
+        if (profileForm.valid) {
+            // get user data with old password
+            const responseGET = userService.execute().call({
+                method: "GET",
+                route: `/users/${customerNo}.json`,
+            }).object;
+
+            userData = JSON.parse(responseGET); // parse raw data
+
+            if (userData) {
+                passwordsMatch =
+                    userData.password ===
+                    profileForm.login.currentpassword.value; // check if old password matches new one
+
+                if (passwordsMatch) {
+                    userData.password = newPasswords.newpassword.value; // set thenew password
+
+                    // update user data
+                    const responsePUT = userService.execute().call({
+                        method: "PUT",
+                        route: `/users/${customerNo}.json`,
+                        body: userData,
+                    }).object;
+
+                    userDataSuccess = JSON.parse(responsePUT); // prase raw data
+                }
             }
-        });
+
+            this.on("route:BeforeComplete", function () {
+                // if error with database, display database connection message
+                if (!userData) {
+                    profileForm.valid = false;
+                    newPasswords.newpasswordconfirm.valid = false;
+                    newPasswords.newpasswordconfirm.error = Resource.msg(
+                        "database.connection",
+                        "errors",
+                        null
+                    );
+
+                    res.json({
+                        success: false,
+                        fields: formErrors.getFormErrors(profileForm),
+                    });
+                    return;
+                }
+                // if old password and new password don't match display error
+                if (!passwordsMatch) {
+                    profileForm.valid = false;
+                    profileForm.login.currentpassword.valid = false;
+                    profileForm.login.currentpassword.error = Resource.msg(
+                        "error.message.currentpasswordnomatch",
+                        "forms",
+                        null
+                    );
+
+                    res.json({
+                        success: false,
+                        fields: formErrors.getFormErrors(profileForm),
+                    });
+                    return;
+                }
+            });
+        } else {
+            res.json({
+                success: false,
+                fields: formErrors.getFormErrors(profileForm),
+            });
+        }
         return next();
     }
 );

@@ -39,23 +39,79 @@ server.append(
     "SaveAddress",
     csrfProtection.validateAjaxRequest,
     function (req, res, next) {
-        var CustomerMgr = require("dw/customer/CustomerMgr");
-        var Transaction = require("dw/system/Transaction");
-        var formErrors = require("*/cartridge/scripts/formErrors");
-        var accountHelpers = require("*/cartridge/scripts/helpers/accountHelpers");
-        var addressHelpers = require("*/cartridge/scripts/helpers/addressHelpers");
+        const formErrors = require("*/cartridge/scripts/formErrors");
+        const addressForm = server.forms.getForm("address"); // get address form
+        const userService = require("*/cartridge/scripts/userService.js"); // define userService
+        const customerNo = req.currentCustomer.profile.customerNo; // get customerNo, needed for service
+        let userDataSuccess, userData, method;
 
-        var addressForm = server.forms.getForm("address");
-        var addressFormObj = addressForm.toObject();
-        addressFormObj.addressForm = addressForm;
-        var customer = CustomerMgr.getCustomerByCustomerNumber(
-            req.currentCustomer.profile.customerNo
-        );
+        // check if form is valid
+        if (addressForm.valid) {
+            // new address info
+            const address = {
+                addressId: addressForm.addressId.value,
+                firstName: addressForm.firstName.value,
+                lastName: addressForm.lastName.value,
+                address1: addressForm.address1.value,
+                address2: addressForm.address2.value,
+                city: addressForm.city.value,
+                postalCode: addressForm.postalCode.value,
+                country: addressForm.country.value,
+                states: addressForm.states.value,
+                phone: addressForm.phone.value,
+            };
 
-        const response = userService
-            .execute()
-            .call({ method: "PUT", route: "/users.json", body }).object;
+            // get address info if existing
+            const responseGET = userService.execute().call({
+                method: "GET",
+                route: `/addresses/${customerNo}.json`,
+            }).object;
 
+            userData = JSON.parse(responseGET); // parse raw data
+
+            // check if data exists
+            if (userData) {
+                method = "PUT";
+                userData.addresses.push(address); // if address exists, add it to array
+            } else {
+                method = "PUSH";
+                userData = { addresses: [address] }; // if address doesn't exist, create object with array field
+            }
+
+            // Push or Put new address
+            const responsePUT = userService.execute().call({
+                method: method,
+                route: `/addresses/${customerNo}.json`,
+                body: userData,
+            }).object;
+
+            userDataSuccess = JSON.parse(responsePUT); // parse raw data
+
+            this.on("route:BeforeComplete", function () {
+                // if error with database, display database connection message
+                if (!userDataSuccess) {
+                    addressForm.valid = false;
+                    addressForm.phone.valid = false;
+                    addressForm.phone.error = Resource.msg(
+                        "database.connection",
+                        "errors",
+                        null
+                    );
+
+                    res.json({
+                        success: false,
+                        fields: formErrors.getFormErrors(addressForm),
+                    });
+
+                    return;
+                }
+            });
+        } else {
+            res.json({
+                success: false,
+                fields: formErrors.getFormErrors(addressForm),
+            });
+        }
         return next();
     }
 );
