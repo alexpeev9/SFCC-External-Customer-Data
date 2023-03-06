@@ -204,6 +204,18 @@ server.replace(
                                     );
                             }
                         }
+                    } else {
+                        registrationForm.validForm = false;
+                        res.setViewData(registrationForm);
+                        res.setStatusCode(500);
+                        res.json({
+                            success: false,
+                            errorMessage: Resource.msg(
+                                "database.connection",
+                                "errors",
+                                null
+                            ),
+                        });
                     }
                 }
 
@@ -283,16 +295,11 @@ server.append(
     server.middleware.https,
     csrfProtection.validateAjaxRequest,
     function (req, res, next) {
-        var Transaction = require("dw/system/Transaction");
-        var CustomerMgr = require("dw/customer/CustomerMgr");
-        var Resource = require("dw/web/Resource");
-        var URLUtils = require("dw/web/URLUtils");
-        var accountHelpers = require("*/cartridge/scripts/helpers/accountHelpers");
+        const CustomerMgr = require("dw/customer/CustomerMgr");
+        const Resource = require("dw/web/Resource");
         const userService = require("*/cartridge/scripts/userService.js");
-
-        var formErrors = require("*/cartridge/scripts/formErrors");
-
-        var profileForm = server.forms.getForm("profile");
+        const formErrors = require("*/cartridge/scripts/formErrors");
+        const profileForm = server.forms.getForm("profile");
 
         const body = {
             firstname: profileForm.customer.firstname.value,
@@ -302,17 +309,35 @@ server.append(
             password: profileForm.login.password.value,
         };
 
-        var customer = CustomerMgr.getCustomerByCustomerNumber(
+        const customer = CustomerMgr.getCustomerByCustomerNumber(
             req.currentCustomer.profile.customerNo
         );
-        var profile = customer.getProfile();
+        const profile = customer.getProfile();
 
-        userService.execute().call({
+        const response = userService.execute().call({
             method: "PUT",
             route: `/users/${profile.customerNo}.json`,
             body,
         }).object;
+        const data = JSON.parse(response);
 
+        this.on("route:BeforeComplete", function (req, res) {
+            if (!data) {
+                profileForm.customer.firstname.valid = false;
+                profileForm.customer.firstname.error = Resource.msg(
+                    "database.connection",
+                    "errors",
+                    null
+                );
+
+                res.json({
+                    success: false,
+                    fields: formErrors.getFormErrors(profileForm),
+                });
+
+                return;
+            }
+        });
         return next();
     }
 );
