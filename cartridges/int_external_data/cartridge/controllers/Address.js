@@ -41,7 +41,7 @@ server.append(
     function (req, res, next) {
         const formErrors = require("*/cartridge/scripts/formErrors");
         const addressForm = server.forms.getForm("address"); // get address form
-        const userService = require("*/cartridge/scripts/userService.js"); // define userService
+        const firebaseService = require("*/cartridge/scripts/firebaseService.js"); // define firebaseService
         const customerNo = req.currentCustomer.profile.customerNo; // get customerNo, needed for service
         let userDataSuccess, userData;
 
@@ -62,7 +62,7 @@ server.append(
             };
 
             // get address info if existing
-            const responseGET = userService.execute().call({
+            const responseGET = firebaseService.execute().call({
                 method: "GET",
                 route: `/users/${customerNo}.json`,
             }).object;
@@ -77,7 +77,7 @@ server.append(
                     userData.addresses = [address]; // if address doesn't exist, create property with array field
                 }
                 // Push or Put new address
-                const responsePUT = userService.execute().call({
+                const responsePUT = firebaseService.execute().call({
                     method: "PUT",
                     route: `/users/${customerNo}.json`,
                     body: userData,

@@ -41,7 +41,7 @@ server.replace(
         const Resource = require("dw/web/Resource");
         const formErrors = require("*/cartridge/scripts/formErrors");
         const registrationForm = server.forms.getForm("profile");
-        const userService = require("*/cartridge/scripts/userService.js"); // define userService
+        const firebaseService = require("*/cartridge/scripts/firebaseService.js"); // define firebaseService
 
         // body for firebase query
         const body = {
@@ -128,7 +128,7 @@ server.replace(
 
                     // Refactored New Part
 
-                    const response = userService.execute().call({
+                    const response = firebaseService.execute().call({
                         method: "POST",
                         route: "/users.json",
                         body,
@@ -298,7 +298,7 @@ server.append(
         const Resource = require("dw/web/Resource");
         const formErrors = require("*/cartridge/scripts/formErrors");
         const profileForm = server.forms.getForm("profile");
-        const userService = require("*/cartridge/scripts/userService.js"); // define userService
+        const firebaseService = require("*/cartridge/scripts/firebaseService.js"); // define firebaseService
         const customerNo = req.currentCustomer.profile.customerNo; // get customerNo, needed for service
 
         // check if form is valid
@@ -311,7 +311,7 @@ server.append(
                 password: profileForm.login.password.value,
             }; // Body for request
 
-            const response = userService.execute().call({
+            const response = firebaseService.execute().call({
                 method: "PUT",
                 route: `/users/${customerNo}.json`,
                 body,
@@ -371,14 +371,14 @@ server.append(
         const formErrors = require("*/cartridge/scripts/formErrors");
         const profileForm = server.forms.getForm("profile"); // get profile form
         const newPasswords = profileForm.login.newpasswords; // get helper variable
-        const userService = require("*/cartridge/scripts/userService.js"); // define userService
+        const firebaseService = require("*/cartridge/scripts/firebaseService.js"); // define firebaseService
         const customerNo = req.currentCustomer.profile.customerNo; // get customerNo, needed for service
         let userDataSuccess, passwordsMatch, userData; // define variables needed for validations
 
         // check if form is valid
         if (profileForm.valid) {
             // get user data with old password
-            const responseGET = userService.execute().call({
+            const responseGET = firebaseService.execute().call({
                 method: "GET",
                 route: `/users/${customerNo}.json`,
             }).object;
@@ -394,7 +394,7 @@ server.append(
                     userData.password = newPasswords.newpassword.value; // set thenew password
 
                     // update user data
-                    const responsePUT = userService.execute().call({
+                    const responsePUT = firebaseService.execute().call({
                         method: "PUT",
                         route: `/users/${customerNo}.json`,
                         body: userData,
