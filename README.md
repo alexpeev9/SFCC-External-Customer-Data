@@ -1,1 +1,1 @@
-# Exterbnal Customer Data
+# External Customer Data
