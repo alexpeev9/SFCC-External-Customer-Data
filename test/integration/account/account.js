@@ -45,7 +45,7 @@ describe("Customer Register, Edit Profile, Change Password, and Add Address", fu
             });
     });
 
-    it("2) Login and Edit User", async () => {
+    it("2) Edit User", async () => {
         const myRequest = {
             url: `${config.baseUrl}/CSRF-Generate`,
             method: "POST",
