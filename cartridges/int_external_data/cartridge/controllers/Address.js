@@ -43,7 +43,7 @@ server.append(
         const addressForm = server.forms.getForm("address"); // get address form
         const userService = require("*/cartridge/scripts/userService.js"); // define userService
         const customerNo = req.currentCustomer.profile.customerNo; // get customerNo, needed for service
-        let userDataSuccess, userData, method;
+        let userDataSuccess, userData;
 
         // check if form is valid
         if (addressForm.valid) {
@@ -64,28 +64,27 @@ server.append(
             // get address info if existing
             const responseGET = userService.execute().call({
                 method: "GET",
-                route: `/addresses/${customerNo}.json`,
+                route: `/users/${customerNo}.json`,
             }).object;
 
             userData = JSON.parse(responseGET); // parse raw data
 
-            // check if data exists
             if (userData) {
-                method = "PUT";
-                userData.addresses.push(address); // if address exists, add it to array
-            } else {
-                method = "PUSH";
-                userData = { addresses: [address] }; // if address doesn't exist, create object with array field
+                // check if address exists
+                if (userData.addresses) {
+                    userData.addresses.push(address); // if address exists, add it to array
+                } else {
+                    userData.addresses = [address]; // if address doesn't exist, create property with array field
+                }
+                // Push or Put new address
+                const responsePUT = userService.execute().call({
+                    method: "PUT",
+                    route: `/users/${customerNo}.json`,
+                    body: userData,
+                }).object;
+
+                userDataSuccess = JSON.parse(responsePUT); // parse raw data
             }
-
-            // Push or Put new address
-            const responsePUT = userService.execute().call({
-                method: method,
-                route: `/addresses/${customerNo}.json`,
-                body: userData,
-            }).object;
-
-            userDataSuccess = JSON.parse(responsePUT); // parse raw data
 
             this.on("route:BeforeComplete", function () {
                 // if error with database, display database connection message
