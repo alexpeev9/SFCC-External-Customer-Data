@@ -2,6 +2,10 @@
 
 const LocalServiceRegistry = require("dw/svc/LocalServiceRegistry");
 
+/**
+ * Creates connection wih firebase
+ * @returns {Object} Object - returns service configuration
+ */
 function execute() {
     const response = LocalServiceRegistry.createService("http.firebase.user", {
         createRequest: function (svc, args) {
