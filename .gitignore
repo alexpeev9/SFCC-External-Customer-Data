@@ -42,6 +42,10 @@ test/appium/webdriver/config.json
 test/acceptance/report
 test/integration/config.json
 
+.circleci/
+bin/
+
+
 sfcc_dev_tools
 cartridges/custom_cartridge1
 cartridges/app_custom
