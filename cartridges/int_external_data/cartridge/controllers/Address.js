@@ -13,6 +13,8 @@ var csrfProtection = require("*/cartridge/scripts/middleware/csrf");
 var userLoggedIn = require("*/cartridge/scripts/middleware/userLoggedIn");
 var consentTracking = require("*/cartridge/scripts/middleware/consentTracking");
 
+const parseService = require("*/cartridge/scripts/helpers/parseService.js");
+
 /**
  * Address-SaveAddress : Save a new or existing address
  * @name Base/Address-SaveAddress
@@ -41,7 +43,6 @@ server.append(
     function (req, res, next) {
         const formErrors = require("*/cartridge/scripts/formErrors");
         const addressForm = server.forms.getForm("address"); // get address form
-        const firebaseService = require("*/cartridge/scripts/firebaseService.js"); // define firebaseService
         const customerNo = req.currentCustomer.profile.customerNo; // get customerNo, needed for service
         let userDataSuccess, userData;
 
@@ -61,13 +62,8 @@ server.append(
                 phone: addressForm.phone.value,
             };
 
-            // get address info if existing
-            const responseGET = firebaseService.execute().call({
-                method: "GET",
-                route: `/users/${customerNo}.json`,
-            }).object;
-
-            userData = JSON.parse(responseGET); // parse raw data
+            // get user data
+            userData = parseService.call("GET", `/users/${customerNo}.json`);
 
             if (userData) {
                 // check if address exists
@@ -76,14 +72,12 @@ server.append(
                 } else {
                     userData.addresses = [address]; // if address doesn't exist, create property with array field
                 }
-                // Push or Put new address
-                const responsePUT = firebaseService.execute().call({
-                    method: "PUT",
-                    route: `/users/${customerNo}.json`,
-                    body: userData,
-                }).object;
-
-                userDataSuccess = JSON.parse(responsePUT); // parse raw data
+                // Add new address
+                userDataSuccess = parseService.call(
+                    "PUT",
+                    `/users/${customerNo}.json`,
+                    userData
+                );
             }
 
             this.on("route:BeforeComplete", function () {

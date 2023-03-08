@@ -11,6 +11,8 @@ const csrfProtection = require("*/cartridge/scripts/middleware/csrf");
 const userLoggedIn = require("*/cartridge/scripts/middleware/userLoggedIn");
 const consentTracking = require("*/cartridge/scripts/middleware/consentTracking");
 
+const parseService = require("*/cartridge/scripts/helpers/parseService.js");
+
 /**
  * Account-SubmitRegistration : The Account-SubmitRegistration endpoint is the endpoint that gets hit when a shopper submits their registration for a new account
  * @name Base/Account-SubmitRegistration
@@ -41,7 +43,6 @@ server.replace(
         const Resource = require("dw/web/Resource");
         const formErrors = require("*/cartridge/scripts/formErrors");
         const registrationForm = server.forms.getForm("profile");
-        const firebaseService = require("*/cartridge/scripts/firebaseService.js"); // define firebaseService
 
         // body for firebase query
         const body = {
@@ -126,15 +127,7 @@ server.replace(
                     const login = registrationForm.email;
                     const password = registrationForm.password;
 
-                    // Refactored New Part
-
-                    const response = firebaseService.execute().call({
-                        method: "POST",
-                        route: "/users.json",
-                        body,
-                    }).object; // add user in database
-
-                    const data = JSON.parse(response); // parse raw response
+                    const data = parseService.call("POST", "/users.json", body); // create user in firebase
 
                     // if error with database, display database connection message
                     if (!data) {
@@ -298,7 +291,6 @@ server.append(
         const Resource = require("dw/web/Resource");
         const formErrors = require("*/cartridge/scripts/formErrors");
         const profileForm = server.forms.getForm("profile");
-        const firebaseService = require("*/cartridge/scripts/firebaseService.js"); // define firebaseService
         const customerNo = req.currentCustomer.profile.customerNo; // get customerNo, needed for service
 
         // check if form is valid
@@ -311,13 +303,11 @@ server.append(
                 password: profileForm.login.password.value,
             }; // Body for request
 
-            const response = firebaseService.execute().call({
-                method: "PUT",
-                route: `/users/${customerNo}.json`,
-                body,
-            }).object; // updates user data
-
-            const data = JSON.parse(response); // Parse raw response
+            const data = parseService.call(
+                "PUT",
+                `/users/${customerNo}.json`,
+                body
+            ); // update data in external database
 
             this.on("route:BeforeComplete", function (req, res) {
                 // if error with database, display database connection message
@@ -371,19 +361,13 @@ server.append(
         const formErrors = require("*/cartridge/scripts/formErrors");
         const profileForm = server.forms.getForm("profile"); // get profile form
         const newPasswords = profileForm.login.newpasswords; // get helper variable
-        const firebaseService = require("*/cartridge/scripts/firebaseService.js"); // define firebaseService
         const customerNo = req.currentCustomer.profile.customerNo; // get customerNo, needed for service
         let userDataSuccess, passwordsMatch, userData; // define variables needed for validations
 
         // check if form is valid
         if (profileForm.valid) {
             // get user data with old password
-            const responseGET = firebaseService.execute().call({
-                method: "GET",
-                route: `/users/${customerNo}.json`,
-            }).object;
-
-            userData = JSON.parse(responseGET); // parse raw data
+            userData = parseService.call("GET", `/users/${customerNo}.json`);
 
             if (userData) {
                 passwordsMatch =
@@ -393,14 +377,12 @@ server.append(
                 if (passwordsMatch) {
                     userData.password = newPasswords.newpassword.value; // set thenew password
 
-                    // update user data
-                    const responsePUT = firebaseService.execute().call({
-                        method: "PUT",
-                        route: `/users/${customerNo}.json`,
-                        body: userData,
-                    }).object;
-
-                    userDataSuccess = JSON.parse(responsePUT); // prase raw data
+                    // update user data with new password
+                    userDataSuccess = parseService.call(
+                        "PUT",
+                        `/users/${customerNo}.json`,
+                        userData
+                    );
                 }
             }
 
