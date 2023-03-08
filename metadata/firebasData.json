@@ -1,0 +1,55 @@
+{
+  "users": {
+    "-NQ08S3KRdkGgRfKLylp": {
+      "addresses": [
+        {
+          "address1": "Tsar Boris №3",
+          "address2": "Tsar Boris №4",
+          "addressId": "Tsar Boris №3",
+          "city": "Sofia",
+          "country": "BG",
+          "firstName": "Tester",
+          "lastName": "Test",
+          "phone": "9876543210",
+          "postalCode": "40202"
+        },
+        {
+          "address1": "Han Krum №4",
+          "address2": "Han Krum №4",
+          "addressId": "Han Krum №4",
+          "city": "New York",
+          "country": "US",
+          "firstName": "John",
+          "lastName": "Smith",
+          "phone": "9876543210",
+          "postalCode": "40202"
+        }
+      ],
+      "email": "a1678277726598r14@gml.com",
+      "firstname": "Tester",
+      "lastname": "Test",
+      "password": "321Password@@",
+      "phone": "9234567890"
+    },
+    "-NQ08V7_tMPFMFVzs2G3": {
+      "addresses": [
+        {
+          "address1": "Tsar Boris №3",
+          "address2": "Tsar Boris №4",
+          "addressId": "Tsar Boris №3",
+          "city": "Sofia",
+          "country": "BG",
+          "firstName": "Tester",
+          "lastName": "Test",
+          "phone": "9876543210",
+          "postalCode": "40202"
+        }
+      ],
+      "email": "a1678277739259r65@gml.com",
+      "firstname": "Tester",
+      "lastname": "Test",
+      "password": "321Password@@",
+      "phone": "9234567890"
+    }
+  }
+}
