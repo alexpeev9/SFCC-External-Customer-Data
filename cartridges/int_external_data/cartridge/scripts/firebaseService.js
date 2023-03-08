@@ -3,8 +3,8 @@
 const LocalServiceRegistry = require("dw/svc/LocalServiceRegistry");
 
 /**
- * Calls the firebase api
- * @returns {Object} Object - returns service configuration
+ * Creates firebase service
+ * @returns {Object} returns service configuration
  */
 function execute() {
     const response = LocalServiceRegistry.createService("http.firebase.user", {
