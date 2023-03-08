@@ -137,8 +137,8 @@ server.replace(
                         res.json({
                             success: false,
                             errorMessage: Resource.msg(
-                                "database.connection",
-                                "errors",
+                                "message.error.02",
+                                "error",
                                 null
                             ),
                         });
@@ -289,6 +289,7 @@ server.append(
     csrfProtection.validateAjaxRequest,
     function (req, res, next) {
         const Resource = require("dw/web/Resource");
+        const URLUtils = require("dw/web/URLUtils");
         const formErrors = require("*/cartridge/scripts/formErrors");
         const profileForm = server.forms.getForm("profile");
         const customerNo = req.currentCustomer.profile.customerNo; // get customerNo, needed for service
@@ -308,23 +309,20 @@ server.append(
                 `/users/${customerNo}.json`,
                 body
             ); // update data in external database
-
+            res.setViewData(profileForm);
             this.on("route:BeforeComplete", function (req, res) {
                 // if error with database, display database connection message
                 if (!data) {
-                    profileForm.login.password.valid = false;
-                    profileForm.login.password.error = Resource.msg(
-                        "database.connection",
-                        "errors",
-                        null
-                    );
-
+                    res.setStatusCode(500);
                     res.json({
                         success: false,
-                        fields: formErrors.getFormErrors(profileForm),
+                        error: true,
+                        redirectUrl: URLUtils.url(
+                            "Error-ErrorCode",
+                            "err",
+                            "02"
+                        ).toString(),
                     });
-
-                    return;
                 }
             });
         } else {
@@ -358,6 +356,7 @@ server.append(
     csrfProtection.validateAjaxRequest,
     function (req, res, next) {
         const Resource = require("dw/web/Resource");
+        const URLUtils = require("dw/web/URLUtils");
         const formErrors = require("*/cartridge/scripts/formErrors");
         const profileForm = server.forms.getForm("profile"); // get profile form
         const newPasswords = profileForm.login.newpasswords; // get helper variable
@@ -389,19 +388,16 @@ server.append(
             this.on("route:BeforeComplete", function () {
                 // if error with database, display database connection message
                 if (!userData) {
-                    profileForm.valid = false;
-                    newPasswords.newpasswordconfirm.valid = false;
-                    newPasswords.newpasswordconfirm.error = Resource.msg(
-                        "database.connection",
-                        "errors",
-                        null
-                    );
-
+                    res.setStatusCode(500);
                     res.json({
                         success: false,
-                        fields: formErrors.getFormErrors(profileForm),
+                        error: true,
+                        redirectUrl: URLUtils.url(
+                            "Error-ErrorCode",
+                            "err",
+                            "02"
+                        ).toString(),
                     });
-                    return;
                 }
                 // if old password and new password don't match display error
                 if (!passwordsMatch) {

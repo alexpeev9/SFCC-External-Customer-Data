@@ -41,6 +41,7 @@ server.append(
     "SaveAddress",
     csrfProtection.validateAjaxRequest,
     function (req, res, next) {
+        const URLUtils = require("dw/web/URLUtils");
         const formErrors = require("*/cartridge/scripts/formErrors");
         const addressForm = server.forms.getForm("address"); // get address form
         const customerNo = req.currentCustomer.profile.customerNo; // get customerNo, needed for service
@@ -83,20 +84,16 @@ server.append(
             this.on("route:BeforeComplete", function () {
                 // if error with database, display database connection message
                 if (!userDataSuccess) {
-                    addressForm.valid = false;
-                    addressForm.phone.valid = false;
-                    addressForm.phone.error = Resource.msg(
-                        "database.connection",
-                        "errors",
-                        null
-                    );
-
+                    res.setStatusCode(500);
                     res.json({
                         success: false,
-                        fields: formErrors.getFormErrors(addressForm),
+                        error: true,
+                        redirectUrl: URLUtils.url(
+                            "Error-ErrorCode",
+                            "err",
+                            "02"
+                        ).toString(),
                     });
-
-                    return;
                 }
             });
         } else {
